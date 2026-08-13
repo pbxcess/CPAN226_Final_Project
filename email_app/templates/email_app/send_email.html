@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Email Application</title>
+    <link rel="stylesheet" href="{% static 'email_app/style.css' %}">
+</head>
+
+<body>
+
+<div class="email-container">
+
+    <h1>Send an Email</h1>
+
+    <form method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ form.sender_email.label_tag }}
+            {{ form.sender_email }}
+        </div>
+
+        <div class="form-group">
+            {{ form.recipient_email.label_tag }}
+            {{ form.recipient_email }}
+        </div>
+
+        <div class="form-group">
+            {{ form.cc_emails.label_tag }}
+            {{ form.cc_emails }}
+        </div>
+
+        <div class="form-group">
+            {{ form.subject.label_tag }}
+            {{ form.subject }}
+        </div>
+
+        <div class="form-group">
+            {{ form.message.label_tag }}
+            {{ form.message }}
+        </div>
+
+        <div class="form-group">
+            {{ form.attachment.label_tag }}
+            {{ form.attachment }}
+        </div>
+
+        <button type="submit" class="send-button">
+            Send Email
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
