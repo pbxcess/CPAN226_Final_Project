@@ -2,6 +2,13 @@ from django import forms
 
 
 class EmailForm(forms.Form):
+    """
+    Form used to collect the information required to send an email.
+
+    The form collects the sender and recipient email addresses, optional
+    CC recipients, the subject, message body, and an optional attachment.
+    """
+
     sender_email = forms.EmailField(
         label="Sender Email",
         widget=forms.EmailInput(
