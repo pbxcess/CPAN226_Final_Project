@@ -1,4 +1,4 @@
-# Garv Dugh (N01763558) - Completed Project Parts
+# Garv Dugh (N01763558) 
 
 ## Responsibilities completed
 
