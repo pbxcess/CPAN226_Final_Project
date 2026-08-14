@@ -1,4 +1,6 @@
 from django import forms
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 
 class EmailForm(forms.Form):
@@ -11,6 +13,7 @@ class EmailForm(forms.Form):
 
     sender_email = forms.EmailField(
         label="Sender Email",
+        required=True,
         widget=forms.EmailInput(
             attrs={
                 "placeholder": "sender@example.com",
@@ -21,6 +24,7 @@ class EmailForm(forms.Form):
 
     recipient_email = forms.EmailField(
         label="Recipient Email",
+        required=True,
         widget=forms.EmailInput(
             attrs={
                 "placeholder": "recipient@example.com",
@@ -42,6 +46,7 @@ class EmailForm(forms.Form):
 
     subject = forms.CharField(
         label="Subject",
+        required=True,
         max_length=200,
         widget=forms.TextInput(
             attrs={
@@ -53,6 +58,7 @@ class EmailForm(forms.Form):
 
     message = forms.CharField(
         label="Message",
+        required=True,
         widget=forms.Textarea(
             attrs={
                 "placeholder": "Write your message here...",
@@ -71,3 +77,61 @@ class EmailForm(forms.Form):
             }
         )
     )
+
+    def clean_cc_emails(self):
+        """
+        Validate multiple CC email addresses.
+
+        Users can enter multiple email addresses separated by
+        commas or semicolons.
+        """
+
+        cc_value = self.cleaned_data.get("cc_emails", "").strip()
+
+        # CC is optional
+        if not cc_value:
+            return []
+
+        # Allow both comma and semicolon separators
+        cc_value = cc_value.replace(";", ",")
+
+        emails = [
+            email.strip()
+            for email in cc_value.split(",")
+            if email.strip()
+        ]
+
+        invalid_emails = []
+
+        for email in emails:
+            try:
+                validate_email(email)
+            except ValidationError:
+                invalid_emails.append(email)
+
+        if invalid_emails:
+            raise forms.ValidationError(
+                "Invalid CC email address(es): "
+                + ", ".join(invalid_emails)
+            )
+
+        return emails
+
+    def clean_attachment(self):
+        """
+        Validate the uploaded attachment.
+
+        Maximum attachment size is 10 MB.
+        """
+
+        attachment = self.cleaned_data.get("attachment")
+
+        if attachment:
+            max_size = 10 * 1024 * 1024  # 10 MB
+
+            if attachment.size > max_size:
+                raise forms.ValidationError(
+                    "Attachment size cannot exceed 10 MB."
+                )
+
+        return attachment
