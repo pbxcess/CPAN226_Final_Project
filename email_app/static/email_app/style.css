@@ -1,81 +1,146 @@
+/* Main page */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
+    background-color: #121212;
+    color: #f5f5f5;
     margin: 0;
     padding: 0;
 }
 
-.field-error,
-.error-summary {
-    color: #b42318;
-    font-size: 0.9rem;
-    margin: 6px 0 0;
-}
-
-.error-summary {
-    background: #fef3f2;
-    border: 1px solid #fecdca;
-    border-radius: 6px;
-    padding: 10px 12px;
-    margin-bottom: 16px;
-}
-
-.help-text {
-    color: #667085;
-    font-size: 0.85rem;
-    margin: 6px 0 0;
-}
-
+/* Email form container */
 .email-container {
     width: 90%;
     max-width: 700px;
     margin: 50px auto;
-    background-color: white;
+    background-color: #1e1e1e;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #333333;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
+/* Page title */
 h1 {
     text-align: center;
+    color: #ff69b4;
     margin-bottom: 30px;
 }
 
+/* Form spacing */
 .form-group {
     margin-bottom: 20px;
 }
 
+/* Field labels */
 label {
     display: block;
     margin-bottom: 8px;
+    color: #f5f5f5;
     font-weight: bold;
 }
 
+/* Text inputs */
 input,
 textarea {
     width: 100%;
-    padding: 10px;
+    padding: 11px;
     box-sizing: border-box;
-    border: 1px solid #cccccc;
-    border-radius: 5px;
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border: 1px solid #555555;
+    border-radius: 6px;
     font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Placeholder text */
+input::placeholder,
+textarea::placeholder {
+    color: #999999;
+}
+
+/* Pink highlight when a field is selected */
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: #ff69b4;
+    box-shadow: 0 0 0 2px rgba(255, 105, 180, 0.2);
 }
 
 textarea {
     resize: vertical;
 }
 
-.send-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #1f6feb;
-    color: white;
+/* File input button */
+input[type="file"]::file-selector-button {
+    background-color: #333333;
+    color: #ffffff;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
+    padding: 8px 12px;
+    margin-right: 10px;
     cursor: pointer;
 }
 
+input[type="file"]::file-selector-button:hover {
+    background-color: #444444;
+}
+
+/* Send button */
+.send-button {
+    width: 100%;
+    padding: 13px;
+    background-color: #ff69b4;
+    color: #121212;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
 .send-button:hover {
-    background-color: #1558b0;
+    background-color: #ff85c2;
+}
+
+.send-button:active {
+    transform: scale(0.99);
+}
+
+/* Django success/error messages */
+.message {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+/* Successful email */
+.message.success {
+    background-color: #1f3327;
+    color: #9be9b3;
+    border: 1px solid #3a6b4a;
+}
+
+/* Failed email */
+.message.error {
+    background-color: #3a2025;
+    color: #ffb3bd;
+    border: 1px solid #7a3b45;
+}
+
+/* Form validation errors */
+.errorlist {
+    color: #ff8fab;
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+/* Help text under fields */
+.helptext {
+    display: block;
+    color: #aaaaaa;
+    font-size: 12px;
+    margin-top: 6px;
 }

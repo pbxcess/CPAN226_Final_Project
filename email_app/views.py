@@ -1,19 +1,21 @@
 import logging
 
+from django.contrib import messages
+from django.core.mail import EmailMessage
 from django.shortcuts import render
 
 from .forms import EmailForm
 
+
 logger = logging.getLogger(__name__)
 
+"""
+Logic was written by Milana and Garv but Princess needed to re-merge into maestro manually
+"""
 
 def send_email_view(request):
     """
-    Display the email form and process submitted form data.
-
-    Submitted values are currently printed to the console for testing.
-    The email delivery functionality will be connected to this view
-    through the project's email backend.
+    Display the email form and send an email when valid form data is submitted.
     """
 
     if request.method == "POST":
@@ -24,26 +26,51 @@ def send_email_view(request):
             recipient_email = form.cleaned_data["recipient_email"]
             cc_emails = form.cleaned_data["cc_emails"]
             subject = form.cleaned_data["subject"]
-            message = form.cleaned_data["message"]
+            message_body = form.cleaned_data["message"]
             attachments = form.cleaned_data["attachments"]
 
-            # Temporary output used to verify that form data is received correctly.
-            print("Sender:", sender_email)
-            print("Recipient:", recipient_email)
-            print("CC:", cc_emails)
-            print("Subject:", subject)
-            print("Message:", message)
-            print("Attachments:", [attachment.name for attachment in attachments])
+            try:
+                email = EmailMessage(
+                    subject=subject,
+                    body=message_body,
+                    from_email=None,
+                    to=[recipient_email],
+                    cc=cc_emails,
+                    reply_to=[sender_email],
+                )
 
-    # Form validation handles expected user errors. This view deliberately does
-    # not send the email because SMTP delivery belongs to the back-end portion
-    # of the group project. The validated attachment list is ready to pass to it.
+                # Add all uploaded attachments to the email.
+                for attachment in attachments:
+                    email.attach(
+                        attachment.name,
+                        attachment.read(),
+                        attachment.content_type,
+                    )
+
+                # Send the email through the configured SMTP server.
+                email.send(fail_silently=False)
+
+                messages.success(
+                    request,
+                    "Email sent successfully!"
+                )
+
+                # Clear the form after successful sending.
+                form = EmailForm()
+
+            except Exception as error:
+                logger.exception("Email sending failed.")
+
+                messages.error(
+                    request,
+                    f"Failed to send email: {error}"
+                )
 
     else:
         form = EmailForm()
 
-    context = {
-        "form": form
-    }
-
-    return render(request, "email_app/send_email.html", context)
+    return render(
+        request,
+        "email_app/send_email.html",
+        {"form": form}
+    )
